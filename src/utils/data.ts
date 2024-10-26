@@ -1,6 +1,6 @@
-import { Exam } from "@/types/types";
+import { Exam, ExamList } from "@/types/types";
 
-export const ExamsListData = [
+export const ExamsListData:ExamList = [
     {
         id:1,
         title:'Basic Mathematics Exam',

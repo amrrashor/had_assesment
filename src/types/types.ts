@@ -1,3 +1,8 @@
+export type ExamList = [{
+    id:number | string;
+    title: string;
+}];
+
 export type Exam = {
     title: string;
     description?: string;

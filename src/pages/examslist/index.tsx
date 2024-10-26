@@ -20,7 +20,7 @@ const ExamsList = () => {
             <div className='overflow-auto mx-auto p-7 border-2 border-solid border-slate-300 rounded-md h-[600px] w-2/4'>
                 {ExamsListData.map((exam) => (
                     <Link
-                        href={`exameditor/${exam.title}`}
+                        href={`exameditor/${exam.id}`}
                         key={exam.id}
                         className='p-5 hover:border rounded-sm duration-300 cursor-pointer border-b border-solid border-slate-300 w-full flex justify-center mb-5'
                     >
