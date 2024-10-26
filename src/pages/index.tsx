@@ -1,7 +1,9 @@
+import ExamsList from "./examslist";
+
 export default function Home() {
   return (
     <div>
-      hello world
+      <ExamsList />
     </div>
   );
 }
