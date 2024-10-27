@@ -30,3 +30,8 @@ export type formProps = {
     handleAnswerChange: (index: number, e: ChangeEvent<HTMLInputElement>) => void;
     handleAddNewAnswer: () => void;
 };
+
+export type EditProps = { 
+    questionIndex: number | null, 
+    answerIndex: number | null 
+}

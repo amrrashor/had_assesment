@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
 import { ExamDetails, ExamsListData } from '@/utils/data';
 import NewQuestionForm from '@/components/form';
+import { EditProps } from '@/types/types';
 
 
 const ExamEditor = () => {
@@ -16,7 +17,7 @@ const ExamEditor = () => {
         }],
     });
     const [examDetails, setExamDetails] = useState(ExamDetails);
-
+    const [isEditMode, setIsEditMode] = useState<EditProps>({ questionIndex: null, answerIndex: null });
 
     const router = useRouter();
     const id = router?.query?.id;
@@ -61,20 +62,60 @@ const ExamEditor = () => {
 
     const handleSubmitNewQuestion = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setExamDetails((prev) => ({
-            ...prev,
-            questions:[
-                ...(prev.questions || []), question
-            ]
-        }));
+        setExamDetails((prev) => {
+            const updatedQuestions = isEditMode.questionIndex !== null ? prev.questions.map((q, i) => (i === isEditMode.questionIndex ? question : q)) : [...(prev.questions || []), question];
+            return { ...prev, questions: updatedQuestions };
+        });
 
         setQuestion({
             title:'',
             description:'',
             answers: [{title:'', description:'', isCorrect:false}]
         });
-
+        setIsEditMode({
+            questionIndex: null,
+            answerIndex: null,
+        });
         setShowquestionForm(false);
+    };
+
+    const handleEditQuestion = (index: number) => {
+        setQuestion(examDetails.questions[index] as any);
+        setIsEditMode({ questionIndex: index, answerIndex: null });
+        setShowquestionForm(true);
+    };
+
+    const handleEditAnswer = (questionIndex: number, answerIndex: number) => {
+        const answerToEdit = examDetails.questions[questionIndex].answers[answerIndex] as any;
+        setQuestion((prev) => ({
+            ...prev,
+            answers: prev.answers.map((a, i) => (i === answerIndex ? answerToEdit : a)),
+        }));
+        setIsEditMode({ questionIndex, answerIndex });
+        setShowquestionForm(true);
+    };
+
+    const handleRemoveQuestion = (index:number) => {
+        setExamDetails((prev) => ({
+            ...prev,
+            questions: prev.questions.filter((_, i) => i !== index)
+        }))
+    };
+
+    const handleRemoveAnswer = (index:number) => {
+        setQuestion((prev) => ({
+            ...prev,
+            answers: prev.answers.filter((_, i) => i !== index)
+        }))
+    };
+    const handleMakeAnswerCorrect = (index: number) => {
+        setQuestion((prev) => ({
+            ...prev,
+            answers: prev.answers.map((answer, i) => ({
+                ...answer,
+                isCorrect: i === index,
+            })),
+        }));
     };
 
     return (
@@ -105,17 +146,27 @@ const ExamEditor = () => {
             <h1 className='text-2xl'>{ExamDetails.title}</h1>
             <p className='text-xl mb-5'>{ExamDetails.description}</p>
             <div>
-                {examDetails?.questions?.map((item) => (
+                {examDetails?.questions?.map((item, questionIndex) => (
                     <div key={item?.title} className='my-4 border border-solid border-slate-300 rounded-md p-4'>
-                        <h4 className='text-lg font-bold'>{item?.title}</h4>
+                        <div className='flex justify-between flex-col'>
+                            <h4 className='text-lg font-bold'>{item?.title}</h4>
+                            <div>
+                                <button className='mr-2' onClick={() => handleEditQuestion(questionIndex)}>Edit</button>
+                                <button onClick={() => handleRemoveQuestion(questionIndex)}>Delete</button>
+                            </div>
+                        </div>
                         <h5 className='text-base'>{item?.description}</h5>
 
                         <div className='flex justify-evenly items-center flex-wrap mt-5'>
-                            {item?.answers?.map((answer) => (
-                                <div 
-                                    className={`${answer?.isCorrect ? 'bg-green-600' : ''} p-4 border border-solid border-slate-300 rounded-md min-w-28 flex justify-center items-center cursor-pointer`}
-                                >
-                                    {answer?.title}
+                            {item?.answers?.map((answer, answerIndex) => (
+                                <div className='flex flex-col'>
+                                    <div onClick={() => handleMakeAnswerCorrect(answerIndex)} className={`${answer?.isCorrect ? 'bg-green-600' : ''} p-4 border border-solid border-slate-300 rounded-md min-w-28 flex justify-center items-center cursor-pointer`}>
+                                        {answer?.title}
+                                    </div>
+                                    <div>
+                                        <button className='mr-3' onClick={(e) => { handleEditAnswer(questionIndex, answerIndex)}}>Edit</button>
+                                        <button onClick={(e) => {e.stopPropagation(); handleRemoveAnswer(answerIndex)}}>Delete</button>
+                                    </div>
                                 </div>
                             ))}
                         </div>
