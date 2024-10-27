@@ -1,3 +1,5 @@
+import { ChangeEvent, FormEvent } from "react";
+
 export type ExamList = [{
     id:number | string;
     title: string;
@@ -19,4 +21,12 @@ export type Answer = {
     title: string;
     isCorrect: boolean;
     description?: string;
+};
+
+export type formProps = {
+    question: Question,
+    handleSubmitNewQuestion: (e: FormEvent<HTMLFormElement>) => void;
+    handleQuestionChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    handleAnswerChange: (index: number, e: ChangeEvent<HTMLInputElement>) => void;
+    handleAddNewAnswer: () => void;
 };
