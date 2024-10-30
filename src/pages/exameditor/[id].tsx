@@ -79,12 +79,14 @@ const ExamEditor = () => {
         setShowquestionForm(false);
     };
 
+    //EDIT QUESTION
     const handleEditQuestion = (index: number) => {
         setQuestion(examDetails.questions[index] as any);
         setIsEditMode({ questionIndex: index, answerIndex: null });
         setShowquestionForm(true);
     };
 
+    //EDIT ANSWER
     const handleEditAnswer = (questionIndex: number, answerIndex: number) => {
         const answerToEdit = examDetails.questions[questionIndex].answers[answerIndex] as any;
         setQuestion((prev) => ({
@@ -95,6 +97,7 @@ const ExamEditor = () => {
         setShowquestionForm(true);
     };
 
+    //REMOVE QUESTION
     const handleRemoveQuestion = (index:number) => {
         setExamDetails((prev) => ({
             ...prev,
@@ -102,12 +105,24 @@ const ExamEditor = () => {
         }))
     };
 
-    const handleRemoveAnswer = (index:number) => {
-        setQuestion((prev) => ({
-            ...prev,
-            answers: prev.answers.filter((_, i) => i !== index)
-        }))
-    };
+    //REMOVE ANSWER
+    const handleRemoveAnswer = (questionIndex:number ,answerIndex: number) => {
+        console.log('deleted answer', examDetails.questions[questionIndex].answers[answerIndex]);
+        setExamDetails((prev) => {
+            const updatedQuestions = [...prev.questions];
+            updatedQuestions[questionIndex].answers = updatedQuestions[questionIndex].answers.filter(
+                (_, i) => i !== answerIndex
+            );
+            console.log('new array', examDetails.questions[answerIndex].answers[answerIndex]);
+            return {
+                ...prev,
+                questions: updatedQuestions,
+            };
+            
+        });
+    };  
+
+    console.log('new array', examDetails.questions)
     const handleMakeAnswerCorrect = (index: number) => {
         setQuestion((prev) => ({
             ...prev,
@@ -138,6 +153,7 @@ const ExamEditor = () => {
                     handleQuestionChange={handleQuestionChange}
                     handleAnswerChange={handleAnswerChange}
                     handleSubmitNewQuestion={handleSubmitNewQuestion}
+                    // handleRemoveAnswer={handleRemoveAnswer}
                 />
             )}
 
@@ -159,13 +175,13 @@ const ExamEditor = () => {
 
                         <div className='flex justify-evenly items-center flex-wrap mt-5'>
                             {item?.answers?.map((answer, answerIndex) => (
-                                <div className='flex flex-col'>
+                                <div className='flex flex-col' key={`${questionIndex} - ${answerIndex}`}>
                                     <div onClick={() => handleMakeAnswerCorrect(answerIndex)} className={`${answer?.isCorrect ? 'bg-green-600' : ''} p-4 border border-solid border-slate-300 rounded-md min-w-28 flex justify-center items-center cursor-pointer`}>
                                         {answer?.title}
                                     </div>
                                     <div>
                                         <button className='mr-3' onClick={(e) => { handleEditAnswer(questionIndex, answerIndex)}}>Edit</button>
-                                        <button onClick={(e) => {e.stopPropagation(); handleRemoveAnswer(answerIndex)}}>Delete</button>
+                                        <button onClick={(e) => {e.stopPropagation(); handleRemoveAnswer(questionIndex, answerIndex)}}>Delete</button>
                                     </div>
                                 </div>
                             ))}

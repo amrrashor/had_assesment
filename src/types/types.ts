@@ -29,6 +29,7 @@ export type formProps = {
     handleQuestionChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     handleAnswerChange: (index: number, e: ChangeEvent<HTMLInputElement>) => void;
     handleAddNewAnswer: () => void;
+    handleRemoveAnswer?: (index: number) => void;
 };
 
 export type EditProps = { 

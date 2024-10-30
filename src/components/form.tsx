@@ -8,6 +8,7 @@ const NewQuestionForm = ({
     handleQuestionChange,
     handleAnswerChange,
     handleAddNewAnswer,
+    
     }:formProps) => {
         
     return (
@@ -58,6 +59,14 @@ const NewQuestionForm = ({
                         />
                         is Correct? 
                     </label>
+                    <button
+                        type='button'
+                        // onClick={() => handleRemoveAnswer(index)}
+                        className='text-red-600 underline ml-2'
+                    >
+                        Remove Answer
+                    </button>
+
                 </div>
             ))}
             <button type='button' onClick={handleAddNewAnswer} className='p-2 border border-slate-300 rounded-md mb-3'>
