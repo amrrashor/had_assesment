@@ -2,20 +2,173 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import fonts */
+/* @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap'); */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Core colors */
+  --background: #FAFAFA;
+  --white: #FFFFFF;
+  
+  /* Text colors */
+  --text-primary: #0D0C22;
+  --text-secondary: #6E6D7A;
+  --text-tertiary: #9E9EA7;
+  
+  /* Brand colors */
+  --brand-primary: #EA4C89;
+  --brand-secondary: #F082AC;
+  --brand-light: #FFE7EF;
+  
+  /* UI colors */
+  --border-light: #E7E7E9;
+  --border-medium: #DEDEE3;
+  --surface-light: #F8F7F4;
+  --surface-medium: #F3F3F4;
+  
+  /* Feedback colors */
+  --success: #38C793;
+  --warning: #F2994A;
+  --error: #E85C3F;
 }
 
+/* Keep light theme even in dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #FAFAFA;
+    --white: #FFFFFF;
+    --text-primary: #0D0C22;
+    --text-secondary: #6E6D7A;
+    --text-tertiary: #9E9EA7;
+    --brand-primary: #EA4C89;
+    --brand-secondary: #F082AC;
+    --brand-light: #FFE7EF;
+    --border-light: #E7E7E9;
+    --border-medium: #DEDEE3;
+    --surface-light: #F8F7F4;
+    --surface-medium: #F3F3F4;
   }
 }
 
+/* Base styles */
 body {
-  color: var(--foreground);
+  color: var(--text-primary);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+               Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 3.5rem;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 2.25rem;
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* Utility classes */
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply bg-[var(--brand-primary)] text-white px-6 py-3 rounded-full 
+           hover:bg-[var(--brand-secondary)] transition-colors duration-200
+           font-medium shadow-sm hover:shadow-md;
+  }
+
+  .btn-secondary {
+    @apply bg-[var(--surface-medium)] text-[var(--text-primary)] px-6 py-3 
+           rounded-full hover:bg-[var(--border-light)] transition-colors duration-200
+           font-medium;
+  }
+
+  .btn-outline {
+    @apply border border-[var(--border-light)] text-[var(--text-primary)] 
+           px-6 py-3 rounded-full hover:border-[var(--border-medium)] 
+           transition-colors duration-200 font-medium;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-white rounded-2xl p-6 border border-[var(--border-light)]
+           hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-shadow duration-200;
+  }
+
+  /* Form elements */
+  .input {
+    @apply w-full p-3 border rounded-lg border-[var(--border-light)] 
+           bg-[var(--surface-light)] focus:outline-none 
+           focus:border-[var(--brand-primary)] focus:ring-2 
+           focus:ring-[var(--brand-light)] transition-all duration-200;
+  }
+}
+
+/* Enhanced Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand-secondary);
+  border-radius: 50px;
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary);
+  opacity: 1;
+}
+
+/* Scroll Spy Styles */
+.scroll-spy-nav {
+  @apply sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-[var(--border-light)];
+}
+
+.scroll-spy-link {
+  @apply px-4 py-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] 
+         transition-colors duration-200 relative;
+}
+
+.scroll-spy-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-full h-0.5 bg-[var(--brand-primary)] 
+         scale-x-0 transition-transform duration-200 origin-left;
+}
+
+.scroll-spy-link.active {
+  @apply text-[var(--text-primary)] font-medium;
+}
+
+.scroll-spy-link.active::after {
+  @apply scale-x-100;
 }
